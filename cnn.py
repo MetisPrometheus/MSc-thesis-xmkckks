@@ -1,12 +1,15 @@
+# Standard Libraries
+import numpy as np
+
+# Third Party Imports
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import regularizers
-from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dense, Dropout
-from tensorflow.keras.layers import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization, Conv2D, Dropout, Dense, Flatten, MaxPool2D
 from tensorflow.keras.models import Sequential
-import numpy as np
 from sklearn.metrics import log_loss
 # import torch
+
 
 
 class CNN():

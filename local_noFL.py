@@ -1,32 +1,34 @@
-from sklearn.metrics import classification_report, confusion_matrix
-import pandas as pd
-from pathlib import Path
-from tensorflow.keras import regularizers
-from tensorflow import keras
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from matplotlib import pyplot as plt, image as img
+# Standard library imports
+import os
+import time
+
+# Third-party imports
 import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt, image as img
+from memory_profiler import memory_usage
+from pathlib import Path
+from progressbar import progressbar
+from skimage.transform import resize
+from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import BatchNormalization
+from tensorflow import keras
+from tensorflow.keras import layers, regularizers
+from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.layers import (
+    BatchNormalization,
     Conv2D,
-    MaxPool2D,
-    Flatten,
     Dense,
     Dropout,
+    Flatten,
+    Input,
+    MaxPool2D,
 )
-from tensorflow.keras.models import Model, Sequential
-from skimage.transform import resize
 from tensorflow.keras.models import Model, Sequential, load_model
-from tensorflow.keras import layers
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
-from tensorflow.keras.callbacks import ModelCheckpoint
-from tensorflow.keras.layers import Input
-import progressbar
 
 
-import time
-from memory_profiler import memory_usage
 
 
 
@@ -38,17 +40,15 @@ tf.random.set_seed(7)
 # start_time = time.time()
 
 def load_raw_data():
-
-    covid_path = "cnn/data/covid"
-    non_covid_path = "cnn/data/noncovid"
+    script_dir = os.path.dirname(os.path.realpath(__file__))  # Get the directory of the script
+    covid_path = os.path.join(script_dir, "data", "covid")
+    non_covid_path = os.path.join(script_dir, "data", "noncovid")
 
     covid_images = list(Path(covid_path).glob("*.png"))
-
     non_covid_images = list(Path(non_covid_path).glob("*.png"))
 
     # covid_images is about 7500 while non_covid_images is about 7000
     # Only using part of the whole dataset because of memory issues
-
     return covid_images[:2000], non_covid_images[:2000]
 
 

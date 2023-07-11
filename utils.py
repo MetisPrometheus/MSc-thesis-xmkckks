@@ -1,11 +1,27 @@
-from typing import Tuple, Union, List
+# Standard Libraries
+import importlib
+import os
+import sys
+from typing import List, Tuple, Union
+
+# Thirs Party Imports
 import numpy as np
-# from sklearn.linear_model import LogisticRegression
 import openml
 import tensorflow as tf
-import sys
-sys.path.append('/home/ubuntu')
-from cnn.cnn import CNN  # noqa
+
+# Local Imports
+# Get absolute paths to let a user run the script from anywhere
+current_directory = os.path.dirname(os.path.abspath(__file__))
+parent_directory = os.path.basename(current_directory)
+working_directory = os.getcwd()
+# Add parent directory to Python's module search path
+sys.path.append(os.path.join(current_directory, '..'))
+# Compare paths
+if current_directory == working_directory:
+    from cnn import CNN
+else:
+    # Add current directory to Python's module search path
+    CNN = importlib.import_module(f"{parent_directory}.cnn").CNN
 
 
 XY = Tuple[np.ndarray, np.ndarray]

@@ -1,28 +1,40 @@
+# Standard Libraries
+import importlib
+import math
 import os
 import sys
-#sys.path.insert(0, "/home/ubuntu/flower_master/src/py") # forked flwr
-import flwr as fl
-from load_covid import *
-sys.path.append('/home/ubuntu/cnn/FL')
-#sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import utils
+import time
 import warnings
 from typing import List, Tuple
-from she import RLWE, Rq
+
+# Third Party Imports
+import flwr as fl
 import tensorflow as tf
-import math
-from sklearn.metrics import log_loss
 from memory_profiler import memory_usage
-from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
-import time
-import pickle
-
-
-
+from rlwe_xmkckks import RLWE, Rq
+from sklearn.metrics import log_loss
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
-sys.path.append('/home/ubuntu')
-import cnn  # noqa
+# Local Imports
+from load_covid import *
+# Get absolute paths to let a user run the script from anywhere
+current_directory = os.path.dirname(os.path.abspath(__file__))
+parent_directory = os.path.basename(current_directory)
+working_directory = os.getcwd()
+# Add parent directory to Python's module search path
+sys.path.append(os.path.join(current_directory, '..'))
+# Compare paths
+if current_directory == working_directory:
+    from cnn import CNN
+    import utils
+else:
+    # Add current directory to Python's module search path
+    CNN = importlib.import_module(f"{parent_directory}.cnn").CNN
+    import utils
 
 
 if __name__ == "__main__":

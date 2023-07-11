@@ -1,25 +1,36 @@
-import sys
-sys.path.insert(0, "/home/ubuntu/flower_master/src/py") # forked flwr
-import flwr as fl
-import pickle  # To serialize and deserialize Python objects
-import socket
-from typing import Dict, Optional
-from sklearn.metrics import log_loss
-from flwr.common import NDArrays, Scalar
-from typing import List, Tuple, Optional, Dict, Union
-sys.path.append('/home/ubuntu/cnn/FL')
-import utils
-print(fl.__path__)
-from load_covid import *
-sys.path.append('/home/ubuntu')
-import cnn  # noqa
-from flwr.server.strategy import FedAvg
-from she import RLWE, Rq
+# Standard Libraries
+import importlib
 import math
-
+import os
+import sys
 import time
-from sklearn.metrics import classification_report
+from typing import Dict, List, Optional, Tuple, Union
+
+# Third Party Imports
+from flwr.common import NDArrays, Scalar
+from flwr.server.strategy import FedAvg
+import flwr as fl
 from memory_profiler import memory_usage
+from rlwe_xmkckks import RLWE, Rq
+from sklearn.metrics import classification_report
+from sklearn.metrics import log_loss
+
+# Local Imports
+from load_covid import *
+# Get absolute paths to let a user run the script from anywhere
+current_directory = os.path.dirname(os.path.abspath(__file__))
+parent_directory = os.path.basename(current_directory)
+working_directory = os.getcwd()
+# Add parent directory to Python's module search path
+sys.path.append(os.path.join(current_directory, '..'))
+# Compare paths
+if current_directory == working_directory:
+    from cnn import CNN
+    import utils
+else:
+    # Add current directory to Python's module search path
+    CNN = importlib.import_module(f"{parent_directory}.cnn").CNN
+    import utils
 
 
 def fit_round(server_round: int) -> Dict:

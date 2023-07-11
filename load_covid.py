@@ -1,21 +1,23 @@
-from pathlib import Path
+# Standard Libraries
 import os
-import numpy as np
 import random
+from pathlib import Path
 
-from skimage.transform import resize
+# Third Party Imports
+import numpy as np
+import progressbar
 from matplotlib import image as img
+from skimage.transform import resize
 from sklearn.model_selection import train_test_split
 
-import progressbar
 
 
 def load_raw_covid_data(limit):
-    covid_path = "cnn/data/covid"
-    non_covid_path = "cnn/data/noncovid"
-
-    covid_images = list(Path(covid_path).glob("*.png"))
-    non_covid_images = list(Path(non_covid_path).glob("*.png"))
+    script_dir = os.path.dirname(os.path.realpath(__file__))  # Get the directory of the script
+    covid_path = os.path.join(script_dir, "data", "covid")
+    non_covid_path = os.path.join(script_dir, "data", "noncovid")
+    covid_images = [f for f in os.listdir(covid_path) if f.endswith('.png')]
+    non_covid_images = [f for f in os.listdir(non_covid_path) if f.endswith('.png')]
 
     # Randomly samples "limit" amount of images for the train-test phase
     if limit != None:
