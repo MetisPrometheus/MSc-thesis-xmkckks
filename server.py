@@ -33,6 +33,7 @@ else:
     import utils
 
 
+
 def fit_round(server_round: int) -> Dict:
     """Send round number to client."""
     return {"server_round": server_round}
@@ -40,7 +41,6 @@ def fit_round(server_round: int) -> Dict:
 
 def get_evaluate_fn(model):
     """Return an evaluation function for server-side evaluation."""
-
     # Load test data here to avoid the overhead of doing it in 'evaluate' itself
     _, X_test, _, y_test = load_raw_covid_data(limit=500)
 
@@ -56,9 +56,7 @@ def get_evaluate_fn(model):
         print(classification_report(y_test, predicted))
 
         return loss, {"accuracy": accuracy}
-    
     return evaluate
-
 
 
 class CustomFedAvg(FedAvg):
@@ -69,7 +67,6 @@ class CustomFedAvg(FedAvg):
     #def aggregate_fit(self, rnd: int, results: List[Tuple[str, CustomFitRes]], failures: List[str]) -> Tuple[List[np.ndarray], Dict[str, Scalar]]:
         # Use self.rlwe_instance for decryption and aggregation
         # pass
-
 
 
 # Start Flower server for five rounds of federated learning
@@ -102,9 +99,6 @@ if __name__ == "__main__":
         std = 3 # standard deviation of Gaussian distribution
         rlwe = RLWE(n, q, t, std)
         
-
-
-
 
         # Custom Strategy
         strategy = CustomFedAvg(
