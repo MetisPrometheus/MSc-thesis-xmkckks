@@ -97,7 +97,7 @@ def remove_padding(padded_params, original_length):
     """
     - Client Side
     - After receiving decrypted model updates:
-    - Pad flat weights to nearest 2^n, original length is saved. 
+    - Remove the padding that was added during encryption 
     """
     return padded_params[:original_length]
 
