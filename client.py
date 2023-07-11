@@ -203,7 +203,7 @@ if __name__ == "__main__":
                 self.flat_params = list(np.array(self.flat_params) + np.array(server_flat_weights))
             
             # Remove padding and return weights to original tensor structure and set model weights
-            server_flat_weights = self.flat_params[:self.model_length]
+            server_flat_weights = utils.remove_padding(self.model_length)
             # Restore the long list of weights into the neural network's original structure
             server_weights = utils.unflatten_weights(server_flat_weights, self.model_shape)
             print(f"Fedavg plaintext: {server_flat_weights[925:935]}")
