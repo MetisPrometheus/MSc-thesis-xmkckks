@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
         # RLWE SETTINGS (dynamically)
         WEIGHT_DECIMALS = 8
-        model = cnn.cnn.CNN(WEIGHT_DECIMALS)
+        model = CNN(WEIGHT_DECIMALS)
         utils.set_initial_params(model)
         params, _ = utils.get_flat_weights(model)
 

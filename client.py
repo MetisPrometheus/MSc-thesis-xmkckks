@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     # dynamic settings
     WEIGHT_DECIMALS = 8
-    model = cnn.cnn.CNN(WEIGHT_DECIMALS)
+    model = CNN(WEIGHT_DECIMALS)
     utils.set_initial_params(model)
     params, _ = utils.get_flat_weights(model)
     print(params[0:20])
@@ -89,7 +89,7 @@ if __name__ == "__main__":
             self.flat_params = None
             self.WEIGHT_DECIMALS = WEIGHT_DECIMALS
 
-            self.model = cnn.cnn.CNN(WEIGHT_DECIMALS)
+            self.model = CNN(WEIGHT_DECIMALS)
             utils.set_initial_params(self.model)
 
         def get_parameters(self, config):
