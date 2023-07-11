@@ -3,7 +3,7 @@ import os
 import random
 from pathlib import Path
 
-# Third Party Imports
+# Third Party
 import numpy as np
 import progressbar
 from matplotlib import image as img
@@ -13,6 +13,11 @@ from sklearn.model_selection import train_test_split
 
 
 def load_raw_covid_data(limit):
+    """
+    Loads COVID and non-COVID to numpy arrays, resized to specific IMG_SIZE
+    Images are randomly sampled if provided limit. 
+    Split loaded and processed images to training and testing, return four sets.
+    """
     script_dir = os.path.dirname(os.path.realpath(__file__))  # Get the directory of the script
     covid_path = os.path.join(script_dir, "data", "covid")
     non_covid_path = os.path.join(script_dir, "data", "noncovid")
