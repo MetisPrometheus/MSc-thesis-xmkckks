@@ -1,8 +1,8 @@
-# Standard library imports
+# Standard Libraries
 import os
 import time
 
-# Third-party imports
+# Third Party Imports
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt, image as img
@@ -30,8 +30,6 @@ import tensorflow as tf
 
 
 
-
-
 # random seed generator
 np.random.seed(3)
 tf.random.set_seed(7)
@@ -53,7 +51,6 @@ def load_raw_data():
 
 
 covid_images, non_covid_images = load_raw_data()
-
 IMG_SIZE = 128
 
 # Two empty numpy arrays to store coverted images
@@ -98,10 +95,9 @@ for i, _file in enumerate(non_covid_images):
 non_covid_bar.finish()
 print("non covid images converting done")
 
-# To load dataset and concat them to x and y
-
 
 def load_data():
+    """To load dataset and concat them to x and y. """
     positive = positive_npy
     positive_labels = ["1" for i in positive]
     negative = negative_npy
@@ -112,10 +108,22 @@ def load_data():
     y = np.array((positive_labels + negative_labels), dtype=np.float32)
     return X, y
 
+
 # CNN model
-
-
 def cnn():
+    """
+    This function creates and compiles a cnn model using the tensorflow keras api 
+    First three convolutional layers, each followed by batch normalization and max pooling. 
+        - each layer uses 5x5 filters and a ReLU activation function, with L2 regularization. 
+        - first, second, and third layers contain 32, 16, and 32 filters respectively.
+    After convolutional layers we have a Flatten layer to convert 3D output to 1D
+    After is a fully connected Dense layer with 200 nodes
+        - uses a ReLU activation function and L2 regularization. 
+        - has a dropout rate of 0.5 to prevent overfitting.
+    Final layer also a Dense layer with 2 nodes to representing the two output classes.
+        - uses a softmax activation function for multiclass classification
+    Model is compiled with Adam Optimizer
+    """
     model = Sequential()
     # convulutional layer
     model.add(
@@ -156,6 +164,9 @@ def cnn():
 
 
 def measure_memory():
+    """
+    Trains a local CNN model on COVID-19 images while tracking memory usage and execution time.
+    """
     start_time = time.time()
 
     covid_images, non_covid_images = load_raw_data()
@@ -191,9 +202,8 @@ def measure_memory():
         verbose=1,
         restore_best_weights=True)
 
-
     model.summary()
-
+    
     history_cnn = model.fit(
         X_train,
         y_train,
@@ -217,4 +227,3 @@ def measure_memory():
 
 mem_usage = memory_usage(measure_memory)
 print("Memory usage (in MB):", max(mem_usage))
-

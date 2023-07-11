@@ -24,7 +24,17 @@ class CNN():
 
     def set_initial_params(self):
         """
-        Sets up the CNN model 
+        This function creates and compiles a cnn model using the tensorflow keras api 
+        First three convolutional layers, each followed by batch normalization and max pooling. 
+            - each layer uses 5x5 filters and a ReLU activation function, with L2 regularization. 
+            - first, second, and third layers contain 32, 16, and 32 filters respectively.
+        After convolutional layers we have a Flatten layer to convert 3D output to 1D
+        After is a fully connected Dense layer with 200 nodes
+            - uses a ReLU activation function and L2 regularization. 
+            - has a dropout rate of 0.5 to prevent overfitting.
+        Final layer also a Dense layer with 2 nodes to representing the two output classes.
+            - uses a softmax activation function for multiclass classification
+        Model is compiled with Adam Optimizer
         """
         model = Sequential()
         # convulutional layer
@@ -131,6 +141,9 @@ class CNN():
     
 
     def flatten_list(self, nested_list):
+        """
+        Takes nested list of tensors from cnn models and flattens it into a single list of elements.
+        """
         flattened = []
         for item in nested_list:
             #if torch.is_tensor(item):
@@ -142,6 +155,9 @@ class CNN():
         return flattened
 
     def unflatten_list(self, flat_list, shapes):
+        """
+        Reshapes flattened list back to a nested list of tensors for a cnn model.
+        """
         unflattened_list = []
         index = 0
         for shape in shapes:
