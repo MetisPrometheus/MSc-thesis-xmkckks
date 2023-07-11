@@ -64,6 +64,7 @@ class CustomFedAvg(FedAvg):
         super().__init__(*args, **kwargs)
         self.rlwe = rlwe_instance
 
+    # Might be useful to overwrite this function if choosing to aggregate differently by using flower's own training loop
     #def aggregate_fit(self, rnd: int, results: List[Tuple[str, CustomFitRes]], failures: List[str]) -> Tuple[List[np.ndarray], Dict[str, Scalar]]:
         # Use self.rlwe_instance for decryption and aggregation
         # pass
