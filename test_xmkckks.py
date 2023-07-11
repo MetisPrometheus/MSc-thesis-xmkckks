@@ -16,6 +16,7 @@ def discrete_gaussian(n, q, mean=0., std=1.):
 
 # q=67108289, t=1021
 if __name__ == '__main__':
+	# Hardcoded rlwe settings, check client.py or server.py for a dynamic option
 	n = 2**20  # power of 2
 	q = 100_000_000_003  # prime number, q = 1 (mod 2n)   
 	t = 200_000_001  # prime number, t < q
@@ -31,7 +32,7 @@ if __name__ == '__main__':
 	print(n)
 	print(flatparameters[925:935])
 
-	# give every client and instance their own instance with the same parameters 
+	# Give every client and instance their own instance with the same parameters 
 	rlwe = RLWE(n, q, t, std)
 	rlwe.generate_vector_a() # generate vector on server and use set_vector on clients
 
@@ -93,7 +94,7 @@ if __name__ == '__main__':
 	print(f"d3: {d3}")
 	print()
 
-	# let server decrypt the secure aggregation
+	# Let server decrypt the secure aggregation
 	dec_sum = csum0 + d1 + d2 + d3
 	dec_sum = Rq(dec_sum.poly.coeffs, t)
 	print(f"plaintext sum: {m0 + m1 + m2}")
