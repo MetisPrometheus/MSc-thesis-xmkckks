@@ -79,7 +79,13 @@ if __name__ == "__main__":
 
 
     class CnnClient(fl.client.NumPyClient):
-
+        """
+        Custom class adapted for cnn models, extended from NumPyClient (base-class from Flower)
+        Incorporates secure multi-key homomorphic encryption for federated learning following the xMK-CKKS scheme
+        Has methods for managing model parameters and fitting/evaluation of the model
+        Also methods for generating public key, storing shared public key, encryption and partial decryption
+        Also to update local weights with new received model updates from server
+        """
         def __init__(self, rlwe_instance: RLWE, WEIGHT_DECIMALS: int, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.rlwe = rlwe_instance
@@ -99,7 +105,7 @@ if __name__ == "__main__":
                 print(w.shape) 
             return utils.get_model_parameters(self.model)
 
-        # use this for default federated learning (changes in server.py also needed)
+        # NB: Use this for default federated learning (changes in server.py also needed)
         """ def fit(self, parameters, config):  # type: ignore
             utils.set_model_params(self.model, parameters)
             with warnings.catch_warnings():
@@ -107,7 +113,7 @@ if __name__ == "__main__":
                 self.model.fit(X_train, y_train, X_val, y_val, epochs=15)
             return utils.get_model_parameters(self.model), len(X_train), {} """
         
-        # use this for lattice encrypted federated learning (changes in server.py also needed)
+        # NB: Use this for lattice encrypted federated learning (changes in server.py also needed)
         def fit(self, parameters, config):  # type: ignore
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
@@ -115,17 +121,13 @@ if __name__ == "__main__":
             return [], len(X_train), {}
 
         def evaluate(self, parameters, config):  # type: ignore
-            # TODO: worth it?
-            # receive flattened parameters from server here instead to allow for inter-round accuracy
-            # unflatten weights then put into set_model_params
             utils.set_model_params(self.model, parameters)
             loss, accuracy = self.model.evaluate(X_test, y_test)
-
             return loss, len(X_test), {"accuracy": accuracy}
         
-        ################################################################################################################
-        #  Below steps are involved in the implementation of federated learning with multi-key homomorphic encryption  #
-        ################################################################################################################
+        ##############################################################################################################
+        #  Below steps are involved in the implementation of multi-key homomorphic encryption for federated learning #
+        ##############################################################################################################
 
         def example_response(self, question: str, l: List[int]) -> Tuple[str, int]:
             response = "Here you go Alice!"
@@ -146,7 +148,6 @@ if __name__ == "__main__":
             self.allpub = (aggregated_pubkey, self.rlwe.get_vector_a())
             print(f"client allpub: {self.allpub}")
             return True
-
 
         # Step 3) After round, encrypt flat list of parameters into two lists (c0, c1)
         def encrypt_parameters(self, request) -> Tuple[List[int], List[int]]:
@@ -178,7 +179,6 @@ if __name__ == "__main__":
             return c0, c1
 
 
-
         # Step 4) Use csum1 to calculate partial decryption share di
         def compute_decryption_share(self, csum1) -> List[int]:
             std = 5
@@ -187,7 +187,6 @@ if __name__ == "__main__":
             d1 = self.rlwe.decrypt(csum1_poly, self.rlwe.s, error)
             d1 = list(d1.poly.coeffs) #d1 is poly_t not poly_q
             return d1
-
 
 
         # Step 5) Retrieve approximated model weights from server and set the new weights
@@ -236,10 +235,7 @@ if __name__ == "__main__":
             print("\nConfusion matrix")
             print(confusion_matrix_)
             print()
-            
             return True
-
-
 
     
     fl.client.start_numpy_client(
