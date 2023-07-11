@@ -49,12 +49,9 @@ if __name__ == '__main__':
 	m1 = Rq(np.random.randint(int(t/20), size=n), t)  # plaintext
 	m2 = Rq(np.random.randint(int(t/20), size=n), t)  # plaintext
 
-	# m0 = Rq(np.random.randint(int(t/2), size=n), t)  # plaintext
-	# m1 = Rq(np.random.randint(int(t/2), size=n), t)  # plaintext
-	# m2 = Rq(np.random.randint(int(t/2), size=n), t)  # plaintext
-
-	test = list(m0.poly.coeffs)
-	test = Rq(np.array(test), t)
+	#conversion between python lists and polynomial objects
+	#test = list(m0.poly.coeffs)
+	#test = Rq(np.array(test), t)
 
 	c0 = rlwe.encrypt(m0, allpub)
 	c1 = rlwe.encrypt(m1, allpub)
@@ -67,17 +64,12 @@ if __name__ == '__main__':
 	print(f"csum1: {csum1}")
 
 	e1star = discrete_gaussian(n, q, 5) # larger variance than error distr from public key generation (3)
-	#d1 = sec1 * csum1 + e1star
-	#d1 = rlwe.decrypt(csum, sec1)
 	d1 = rlwe.decrypt(csum1, sec1, e1star)
 	print(f"plain1: {m0}")
 	print(f"d1: {d1}")
 	print()
-	#print(f"d1: {d1}")
 
 	e2star = discrete_gaussian(n, q, 5)
-	#d2 = sec2 * csum1 + e2star
-	#d2 = rlwe.decrypt(csum, sec2)
 	d2 = rlwe.decrypt(csum1, sec2, e2star)
 	print(f"plain2: {m1}")
 	print(f"d2: {d2}")
@@ -89,17 +81,12 @@ if __name__ == '__main__':
 	print(f"d3: {d3}")
 	print()
 
-	test = csum0 + d1 + d2 + d3
-	test = Rq(test.poly.coeffs, t)
-	#rlwe.decrypt(test, )
+	dec_sum = csum0 + d1 + d2 + d3
+	dec_sum = Rq(dec_sum.poly.coeffs, t)
 	print(f"plaintext sum: {m0 + m1 + m2}")
-	print(f"decrypted sum: {test}")
+	print(f"decrypted sum: {dec_sum}")
 	
-
-	foo = csum0 + d1
-	foo = Rq(foo.poly.coeffs, t)
-	print(foo)
-
-	foo = csum0 + d2
-	foo = Rq(foo.poly.coeffs, t)
-	print(foo)
+	# testing decrypted sum if not all partial decryption shares are given
+	dec_sum = csum0 + d1
+	dec_sum = Rq(dec_sum.poly.coeffs, t)
+	print(dec_sum)
