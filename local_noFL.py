@@ -46,7 +46,6 @@ def load_raw_data():
     non_covid_images = list(Path(non_covid_path).glob("*.png"))
 
     # covid_images is about 7500 while non_covid_images is about 7000
-    # Only using part of the whole dataset because of memory issues
     return covid_images[:2000], non_covid_images[:2000]
 
 

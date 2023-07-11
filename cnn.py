@@ -72,8 +72,6 @@ class CNN():
                 learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=0.1, decay=0.0),
             metrics=["accuracy"],
         )
-        # optimizer = model.optimizer
-        # print(f"optimizervalues: {optimizer.get_weights()}")
         self.model = model
 
     def fit(self, X_train, y_train, X_val, y_val, epochs=20, workers=4):
@@ -100,8 +98,6 @@ class CNN():
             patience=2,
             verbose=1,
             restore_best_weights=True)
-
-        # self.model.summary()
 
         self.model.fit(
             X_train,
